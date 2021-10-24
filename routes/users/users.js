@@ -6,6 +6,6 @@ const loginLimit = require('../../helpers/rate-limit-login');
 
 router.post('/registration', registration);
 router.post('/login', loginLimit, login);
-router.post('/logout', guard, logout);
+router.post('/logout', guard, logout); //* проверяем зарегестрирован или нет пользователь и только тогда его разлогиниваем
 
 module.exports = router;

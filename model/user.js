@@ -54,15 +54,18 @@ const userSchema = new Schema(
   },
 );
 
+//* "Cолим" пароль
 userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     const salt = await bcrypt.genSalt(SALT_FACTOR);
-    this.password = await bcrypt.hash(this.password, salt);
+    this.password = await bcrypt.hash(this.password, salt); //*  // шифруем пароль, превращаем в хеш
   }
   next();
 });
 
+//* пишем метод для проверки пароля при логинизации
 userSchema.methods.isValidPassword = async function (password) {
+  //* сравнение паролей, на выходе булиан
   return bcrypt.compare(password, this.password);
 };
 

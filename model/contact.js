@@ -1,5 +1,6 @@
 const { Schema, model, SchemaTypes } = require('mongoose');
 const { ValidInfoContact } = require('../config/constant');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const contactSchema = new Schema(
   {
@@ -23,7 +24,7 @@ const contactSchema = new Schema(
     },
     owner: {
       type: SchemaTypes.ObjectId,
-      ref: 'user',
+      ref: 'user', //*  делаем связь ObjectId с моделбю user
     },
   },
   {
@@ -41,10 +42,19 @@ const contactSchema = new Schema(
   },
 );
 
+contactSchema.virtual('status').get(function () {
+  if (this.age >= 60) {
+    return 'old';
+  }
+  return 'young';
+});
+
 contactSchema.path('name').validate(function (value) {
   const re = /[A-Z]\w+/;
   return re.test(String(value));
 });
+
+contactSchema.plugin(mongoosePaginate);
 
 const Contact = model('contact', contactSchema);
 
